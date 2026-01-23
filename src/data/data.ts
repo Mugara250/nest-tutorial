@@ -1,10 +1,22 @@
-interface Users {
+type User = {
+  userID: number;
   username: string;
-  id: number;
-}
-
-export const users: Users[] = [
-  { username: 'John Doe', id: 3 },
-  { username: 'Jane Doe', id: 2 },
-  { username: 'Joriji Baneti', id: 1 },
+  password: string;
+};
+export const users: User[] = [
+  {
+    userID: 1,
+    username: 'Joriji Baneti',
+    password: 'fkdjasflkjdasklfjadsjfkadjkfh',
+  },
+  {
+    userID: 2,
+    username: 'John Doe',
+    password: 'fkdjasflkjdasklfjadsjfkadjkfh',
+  },
+  {
+    userID: 3,
+    username: 'Jane Doe',
+    password: 'fkdjasflkjdasklfjadsjfkadjkfh',
+  },
 ];

@@ -1,22 +1,21 @@
 import { Injectable } from '@nestjs/common';
 import { users } from '../data/data';
+type User = { userID: number, username: string }
 @Injectable()
 export class UsersService {
-  async findAll(): Promise<{ username: string; id: number }[]> {
+  async findAll(): Promise<User[]> {
     return users;
   }
 
-  async find(id: number): Promise<{ username: string; id: number } | null> {
-    return users.some((user) => user.id === id)
-      ? users.filter((user) => user.id === id)[0]
+  async find(id: number): Promise<User | null> {
+    return users.some((user) => user.userID === id)
+      ? users.filter((user) => user.userID === id)[0]
       : null;
   }
 
   async findUserByName(
     name: string,
-  ): Promise<{ username: string; id: number } | null> {
-    return users.some((user) => user.username === name)
-      ? users.filter((user) => user.username === name)[0]
-      : null;
+  ): Promise<User | undefined> {
+    return users.find((user) => user.username === name)
   }
 }

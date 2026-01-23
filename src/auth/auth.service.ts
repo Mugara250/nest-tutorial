@@ -1,26 +1,37 @@
-import { Injectable } from '@nestjs/common';
-import { CreateAuthDto } from './dto/create-auth.dto';
-import { UpdateAuthDto } from './dto/update-auth.dto';
+import {
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common';
+import { UsersService } from 'src/users/users.service';
+import { users } from 'src/data/data';
+
+type AuthInput = { username: string; password: string };
+type SignInData = { userID: number; username: string };
+type AuthResult = { accessToken: string; userID: number; username: string };
 
 @Injectable()
 export class AuthService {
-  create(createAuthDto: CreateAuthDto) {
-    return 'This action adds a new auth';
-  }
+  public constructor(private readonly usersService: UsersService) {}
+  async authenticate(input: AuthInput): Promise<AuthResult> {
+    const user = await this.validate(input);
 
-  findAll() {
-    return `This action returns all auth`;
+    if (!user) {
+      throw new UnauthorizedException('Not authenticated');
+    }
+    return {
+      accessToken: 'afkjadlfjlafjldaksjfdakjfadjfkda',
+      userID: user.userID,
+      username: user.username,
+    };
   }
+  async validate(input: AuthInput): Promise<SignInData | undefined> {
+    const user = await this.usersService.findUserByName(input.username);
+    const password = users.find(
+      (_user) => _user.username === user?.username,
+    )?.password;
 
-  findOne(id: number) {
-    return `This action returns a #${id} auth`;
-  }
-
-  update(id: number, updateAuthDto: UpdateAuthDto) {
-    return `This action updates a #${id} auth`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} auth`;
+    if (user && password === input.password) {
+      return user;
+    }
   }
 }

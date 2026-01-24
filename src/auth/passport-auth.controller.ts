@@ -1,6 +1,8 @@
 import { Controller, Get, Post, Req, UseGuards } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { PassportLocalGuard } from './guards/passport-local.guards';
+import { JwtStrategy } from './strategies/jwt.strategy';
+import { PassportJwtGuard } from './guards/passport-jwt.guard';
 
 @Controller('auth-v2')
 export class PassportController {
@@ -10,9 +12,12 @@ export class PassportController {
   @UseGuards(PassportLocalGuard)
   @Post('login')
   async login(@Req() request) {
-    return this.authService.signIn(request.user)
+    return this.authService.signIn(request.user);
   }
 
   @Get('me')
-  async getUserInfo() {}
+  @UseGuards(PassportJwtGuard)
+  async getUserInfo(@Req() request) {
+    return request.user;
+  }
 }

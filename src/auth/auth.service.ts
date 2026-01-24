@@ -14,7 +14,7 @@ export class AuthService {
     private readonly jwtService: JwtService,
   ) {}
   async authenticate(input: AuthInput): Promise<AuthResult> {
-    const user = await this.validate(input);
+    const user = await this.validateUser(input);
 
     if (!user) {
       throw new UnauthorizedException('Not authenticated');
@@ -22,7 +22,7 @@ export class AuthService {
 
     return await this.signIn(user);
   }
-  async validate(input: AuthInput): Promise<SignInData | undefined> {
+  async validateUser(input: AuthInput): Promise<SignInData | undefined> {
     const user = await this.usersService.findUserByName(input.username);
     const password =
       user && users.find((_user) => _user.username === user.username)?.password;

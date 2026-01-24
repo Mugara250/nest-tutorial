@@ -13,10 +13,15 @@ export class AuthGuard implements CanActivate {
     const request = context.switchToHttp().getRequest();
     const authorization = request.headers.authorization;
 
-    if (!authorization || !authorization.startsWith('Bearer ')) {
+    if (!authorization || typeof authorization !== 'string') {
       throw new UnauthorizedException('Access denied');
     }
-    const token = authorization?.split(' ')[1];
+
+    const [type, token] = authorization.split(' ');
+
+    if (type !== 'Bearer' || !token) {
+      throw new UnauthorizedException('Access denied');
+    }
 
     try {
       const tokenPayload = await this.jwtService.verifyAsync(token);

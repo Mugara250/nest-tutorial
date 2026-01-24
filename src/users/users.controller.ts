@@ -10,6 +10,7 @@ export class UsersController {
     return await this.usersService.findAll();
   }
 
+  // this must be placed below static routes to prevent it from intercepting their requests
   @Get(':id')
   async find(
     @Param('id') id: string,
